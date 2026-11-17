@@ -16,6 +16,11 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    build: {
+        rollupOptions: {
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+        },
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\View::addLocation(resource_path());
+        \Illuminate\Support\Facades\View::addLocation(resource_path('layout'));
     }
 }

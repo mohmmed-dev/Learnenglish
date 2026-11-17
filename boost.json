@@ -1,0 +1,22 @@
+{
+    "agents": [
+        "claude_code",
+        "antigravity",
+        "cursor",
+        "opencode"
+    ],
+    "cloud": true,
+    "packages": [
+        "fruitcake/laravel-debugbar"
+    ],
+    "skills": [
+        "infer-conventions",
+        "deploying-to-cloud",
+        "laravel-best-practices",
+        "testing-best-practices",
+        "socialite-development",
+        "livewire-development",
+        "tailwindcss-development",
+        "debug-using-debugbar"
+    ]
+}

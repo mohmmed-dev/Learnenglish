@@ -1,9 +1,70 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+@source "../**/*.blade.php";
+@source "../**/*.js";
+@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
+@source "../../storage/framework/views/*.php";
+
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+  --color-primary: #0066E6;
+  --color-primary-hover: #0052b8;
+  --color-primary-focus: #00469e;
+  --color-primary-content: #ffffff;
+  --color-brand: #0066E6;
+  --color-brand-50: #f0f6fe;
+  --color-brand-100: #e0edfe;
+  --color-brand-500: #0066E6;
+  --color-brand-600: #0052b8;
+  --color-brand-700: #003e8c;
+}
+
+:root {
+  --p: 213 100% 45%;
+  --pc: 0 0% 100%;
+  --color-primary: #0066E6;
+  --color-primary-content: #ffffff;
+}
+
+[data-theme="dark"] {
+  --p: 213 100% 45%;
+  --pc: 0 0% 100%;
+  --color-primary: #0066E6;
+  --color-primary-content: #ffffff;
+}
+
+/* Force primary button styling to exact brand #0066E6 */
+.btn-primary {
+  background-color: #0066E6 !important;
+  border-color: #0066E6 !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:hover {
+  background-color: #0052b8 !important;
+  border-color: #0052b8 !important;
+}
+
+.text-primary {
+  color: #0066E6 !important;
+}
+
+.bg-primary {
+  background-color: #0066E6 !important;
+}
+
+.border-primary {
+  border-color: #0066E6 !important;
+}
+
+/* Custom glow effects & smooth transitions */
+.brand-glow {
+  box-shadow: 0 10px 30px -10px rgba(0, 102, 230, 0.35);
+}
+
+.brand-glow-lg {
+  box-shadow: 0 20px 40px -15px rgba(0, 102, 230, 0.45);
 }
