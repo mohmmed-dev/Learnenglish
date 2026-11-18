@@ -10,7 +10,7 @@
         "@tailwindcss/vite": "^4.0.0",
         "concurrently": "^10.0.3",
         "daisyui": "^5.8.1",
-        "laravel-vite-plugin": "^0.2.4",
+        "laravel-vite-plugin": "^1.2.0",
         "tailwindcss": "^4.0.0",
         "vite": "^6.2.7"
     },
