@@ -20,6 +20,7 @@
   --color-brand-500: #0066E6;
   --color-brand-600: #0052b8;
   --color-brand-700: #003e8c;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
 :root {
@@ -58,6 +59,51 @@
 
 .border-primary {
   border-color: #0066E6 !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Brand posters used by video and playlist cards */
+.poster-brand {
+  background: linear-gradient(135deg, #0066E6 0%, #3385ff 55%, #7dd3fc 100%);
+}
+
+.poster-sky {
+  background: linear-gradient(135deg, #0284c7 0%, #0066E6 50%, #60a5fa 100%);
+}
+
+.poster-indigo {
+  background: linear-gradient(135deg, #003e8c 0%, #0066E6 60%, #818cf8 100%);
+}
+
+.poster-ocean {
+  background: linear-gradient(135deg, #00469e 0%, #0ea5e9 60%, #0066E6 100%);
+}
+
+/* Soft grid behind the hero content */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 102, 230, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 102, 230, 0.07) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(ellipse at top, black, transparent 75%);
+}
+
+.dark .hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(51, 133, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(51, 133, 255, 0.12) 1px, transparent 1px);
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float-slow 6s ease-in-out infinite;
 }
 
 /* Custom glow effects & smooth transitions */
