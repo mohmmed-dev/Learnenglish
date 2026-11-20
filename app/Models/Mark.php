@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mark extends Model
 {
-    //
+    public function playlist() {}
+    public function lesson() {}
 }
