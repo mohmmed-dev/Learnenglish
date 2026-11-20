@@ -3,11 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tag extends Model
 {
-    public function lessons()
+    protected $fillable = [
+        'name',
+        'slug',
+    ];
+
+    public function lessons(): BelongsToMany
     {
-        return $this->hasMany(Lesson::class);
+        return $this->belongsToMany(Lesson::class, 'lesson_tags');
     }
 }

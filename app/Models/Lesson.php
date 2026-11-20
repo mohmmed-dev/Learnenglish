@@ -3,31 +3,56 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Lesson extends Model
 {
-    public function carts()
+    protected $fillable = [
+        'category_id',
+        'playlist_id',
+        'title',
+        'slug',
+        'description',
+        'image_url',
+        'youtube_url',
+        'audio_url',
+        'file_url',
+        'body',
+        'is_public',
+    ];
+
+    protected function casts(): array
     {
-        return $this->hasMany(Cart::class);
+        return [
+            'body' => 'array',
+            'is_public' => 'boolean',
+        ];
     }
 
-    public function mark()
-    {
-        return $this->hasMany(Mark::class);
-    }
-
-    public function playlist()
-    {
-        return $this->belongsTo(Playlist::class);
-    }
-
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function tags()
+    public function playlist(): BelongsTo
     {
-        return $this->hasMany(Tag::class);
+        return $this->belongsTo(Playlist::class);
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'lesson_tags');
+    }
+
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function marks(): HasMany
+    {
+        return $this->hasMany(Mark::class);
     }
 }

@@ -4,8 +4,69 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9d520cc120ef7b1304e05ee6d8f168e",
+    "content-hash": "30b9690075fd107a715f461444e6de85",
     "packages": [
+        {
+            "name": "alaouy/youtube",
+            "version": "v2.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alaouy/YouTube.git",
+                "reference": "bacd8002bf22f1867eddf2cfc66ea02e2f4b4fd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alaouy/YouTube/zipball/bacd8002bf22f1867eddf2cfc66ea02e2f4b4fd1",
+                "reference": "bacd8002bf22f1867eddf2cfc66ea02e2f4b4fd1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": "^7.0|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "12.5.8"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Youtube": "Alaouy\\Youtube\\Facades\\Youtube"
+                    },
+                    "providers": [
+                        "Alaouy\\Youtube\\YoutubeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Alaouy\\Youtube\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mustapha Alaouy",
+                    "email": "alaouym@gmail.com"
+                }
+            ],
+            "description": "Laravel PHP Facade/Wrapper for the Youtube Data API v3",
+            "keywords": [
+                "alaouy",
+                "api",
+                "laravel",
+                "video",
+                "youtube"
+            ],
+            "support": {
+                "issues": "https://github.com/alaouy/YouTube/issues",
+                "source": "https://github.com/alaouy/YouTube/tree/v2.2.6"
+            },
+            "time": "2026-03-03T21:22:32+00:00"
+        },
         {
             "name": "archtechx/enums",
             "version": "v1.1.2",

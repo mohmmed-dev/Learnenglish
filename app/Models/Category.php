@@ -3,15 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
-    public function lessons()
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+    ];
+
+    public function lessons(): HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Lesson::class);
     }
-    public function playlists()
+
+    public function playlists(): HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Playlist::class);
     }
 }
