@@ -11,11 +11,11 @@ class Seo
     /**
      * Generate SEO meta tags for a page.
      *
-     * @param  string|null  $title  Page title
+     * @param  string|null  $title        Page title
      * @param  string|null  $description  Meta description
-     * @param  string  $type  Schema type: 'website', 'app', 'profile', 'article', 'webpage'
-     * @param  string|null  $image  OG image URL
-     * @param  array  $extra  Extra data (e.g. published_time, tags, section, breadcrumbs, faq, carousel)
+     * @param  string       $type         Schema type: 'website', 'lesson', 'playlist', 'category', 'article', 'webpage'
+     * @param  string|null  $image        OG image URL
+     * @param  array        $extra        Extra data (e.g. video_url, duration, breadcrumbs, faq, carousel, published_time)
      */
     public static function metaTags(
         ?string $title = null,
@@ -24,10 +24,16 @@ class Seo
         ?string $image = null,
         array $extra = [],
     ): SEOData {
+        $siteName = config('app.name', 'LearnEnglish Audio');
+        $defaultDescription = __('Turn real YouTube videos into interactive English lessons. Listen, shadow, and master natural English conversations with synchronized audio transcripts.');
+        
+        $title = $title ?: $siteName;
+        $description = $description ?: $defaultDescription;
         $image = $image ?: asset('logo.png');
-        $schema = self::getSchema($type, $extra, $image, $description);
 
-        if (isset($extra['breadcrumbs'])) {
+        $schema = self::getSchema($type, $extra, $image, $description, $title);
+
+        if (isset($extra['breadcrumbs']) && is_array($extra['breadcrumbs'])) {
             $schema->push(self::breadcrumbSchema($extra['breadcrumbs']));
         }
 
@@ -35,14 +41,11 @@ class Seo
             $schema->push(self::faqSchema($extra['faq']));
         }
 
-        if (isset($extra['carousel'])) {
+        if (isset($extra['carousel']) && is_array($extra['carousel'])) {
             $schema->push(self::carouselSchema($extra['carousel']));
         }
 
-        $currentCleanUrl = url()->current();
-        $enUrl = $currentCleanUrl;
-        $arUrl = $currentCleanUrl.'?lang=ar';
-        $canonicalUrl = app()->getLocale() === 'ar' ? $arUrl : $enUrl;
+        $canonicalUrl = url()->current();
 
         return new SEOData(
             title: $title,
@@ -61,87 +64,98 @@ class Seo
     /**
      * Build structured data schema based on page type.
      */
-    protected static function getSchema(string $type, array $extra = [], ?string $image = null, ?string $description = null): SchemaCollection
-    {
+    protected static function getSchema(
+        string $type,
+        array $extra = [],
+        ?string $image = null,
+        ?string $description = null,
+        ?string $title = null,
+    ): SchemaCollection {
         $schema = SchemaCollection::initialize();
+        $siteName = config('app.name', 'LearnEnglish Audio');
+        $siteUrl = config('app.url', url('/'));
 
         $organization = [
-            '@type' => 'Organization',
-            'name' => config('app.name', 'TextFood Calorie AI'),
-            'url' => config('app.url'),
-            'logo' => asset('logo.png'),
+            '@type' => 'EducationalOrganization',
+            'name' => $siteName,
+            'url' => $siteUrl,
+            'logo' => [
+                '@type' => 'ImageObject',
+                'url' => asset('logo.svg'),
+            ],
+            'sameAs' => [
+                config('services.youtube.channel_url', 'https://www.youtube.com/'),
+            ],
         ];
 
         match ($type) {
             'website' => $schema->push([
                 '@context' => 'https://schema.org',
                 '@type' => 'WebSite',
-                'name' => config('app.name', 'TextFood Calorie AI'),
-                'url' => config('app.url'),
+                'name' => $siteName,
+                'url' => $siteUrl,
                 'inLanguage' => app()->getLocale(),
+                'description' => $description,
                 'publisher' => $organization,
                 'potentialAction' => [
                     '@type' => 'SearchAction',
-                    'target' => config('app.url').'/?search={search_term_string}',
+                    'target' => url(app()->getLocale() . '/lessons') . '?q={search_term_string}',
                     'query-input' => 'required name=search_term_string',
                 ],
             ]),
 
-            'app', 'software' => $schema->push([
+            'lesson', 'video' => $schema->push([
                 '@context' => 'https://schema.org',
-                '@type' => ['SoftwareApplication', 'WebApplication'],
-                'name' => $extra['app_name'] ?? config('app.name', 'TextFood Calorie AI'),
-                'description' => $extra['app_description'] ?? ($description ?? ''),
-                'image' => $image ?: asset('logo.png'),
-                'url' => $extra['app_url'] ?? url()->current(),
-                'applicationCategory' => 'HealthApplication',
-                'operatingSystem' => 'All (Web Browser, iOS, Android, Desktop)',
-                'inLanguage' => app()->getLocale(),
-                'offers' => [
-                    '@type' => 'Offer',
-                    'price' => '0',
-                    'priceCurrency' => 'USD',
-                    'availability' => 'https://schema.org/InStock',
-                ],
+                '@type' => ['LearningResource', 'VideoObject'],
+                'name' => $title,
+                'description' => $description,
+                'thumbnailUrl' => [$image ?: asset('logo.png')],
+                'uploadDate' => isset($extra['published_time']) ? Carbon::parse($extra['published_time'])->toIso8601String() : Carbon::now()->toIso8601String(),
+                'contentUrl' => $extra['video_url'] ?? $extra['youtube_url'] ?? url()->current(),
+                'embedUrl' => $extra['embed_url'] ?? ($extra['youtube_url'] ?? null),
+                'inLanguage' => 'en',
+                'educationalLevel' => $extra['level'] ?? 'Intermediate',
+                'learningResourceType' => 'Lesson',
                 'publisher' => $organization,
-                'featureList' => [
-                    'AI-powered natural language meal logging',
-                    'Automatic calorie and macronutrient breakdown',
-                    'Personalized daily calorie target, BMR, and TDEE calculator',
-                    'Daily water intake tracker',
-                    'Weight logs and progress monitoring',
-                ],
             ]),
 
-            'profile' => $schema->push([
+            'playlist' => $schema->push([
                 '@context' => 'https://schema.org',
-                '@type' => 'ProfilePage',
-                'name' => $extra['profile_name'] ?? '',
+                '@type' => 'CollectionPage',
+                'name' => $title,
+                'description' => $description,
                 'url' => url()->current(),
-                'mainEntity' => [
-                    '@type' => 'Person',
-                    'name' => $extra['profile_name'] ?? '',
-                    'url' => url()->current(),
-                    'image' => $extra['profile_image'] ?? null,
-                    'description' => $extra['profile_description'] ?? '',
-                ],
+                'inLanguage' => app()->getLocale(),
+                'publisher' => $organization,
+            ]),
+
+            'category' => $schema->push([
+                '@context' => 'https://schema.org',
+                '@type' => 'CollectionPage',
+                'name' => $title,
+                'description' => $description,
+                'url' => url()->current(),
+                'inLanguage' => app()->getLocale(),
                 'publisher' => $organization,
             ]),
 
             'article' => $schema->push([
                 '@context' => 'https://schema.org',
                 '@type' => 'Article',
-                'headline' => $extra['headline'] ?? '',
+                'headline' => $title,
+                'description' => $description,
+                'image' => $image,
                 'inLanguage' => app()->getLocale(),
                 'publisher' => $organization,
-                'datePublished' => $extra['published_time'] ?? null,
-                'dateModified' => $extra['modified_time'] ?? null,
+                'datePublished' => isset($extra['published_time']) ? Carbon::parse($extra['published_time'])->toIso8601String() : null,
+                'dateModified' => isset($extra['modified_time']) ? Carbon::parse($extra['modified_time'])->toIso8601String() : null,
             ]),
 
             default => $schema->push([
                 '@context' => 'https://schema.org',
                 '@type' => 'WebPage',
-                'name' => config('app.name', 'TextFood Calorie AI'),
+                'name' => $title,
+                'description' => $description,
                 'url' => url()->current(),
                 'inLanguage' => app()->getLocale(),
                 'publisher' => $organization,

@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\LessonController;
+use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProviderController;
 use App\Livewire\Admin\ManageCategories;
 use App\Livewire\Admin\ManageLessons;
@@ -38,6 +41,22 @@ Route::prefix('admin')
         Route::get('/users', ManageUsers::class)->name('users');
     });
 
+// ── App Frontend Routes ───────────────────────────────────────────────────────
 Route::group(['prefix' => '{locale}'], function () {
     Route::get('/', HomeController::class)->name('home');
+
+    // Lessons
+    Route::get('lessons', [LessonController::class, 'index'])->name('lessons.index');
+    Route::get('lesson/{slug}', [LessonController::class, 'show'])->name('lessons.show');
+    Route::get('lesson-alias/{slug}', [LessonController::class, 'show'])->name('lesson.show');
+
+    // Playlists
+    Route::get('playlists', [PlaylistController::class, 'index'])->name('playlists.index');
+    Route::get('playlist/{slug}', [PlaylistController::class, 'show'])->name('playlists.show');
+    Route::get('playlist-alias/{slug}', [PlaylistController::class, 'show'])->name('playlist.show');
+
+    // Categories
+    Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
+    Route::get('category-alias/{slug}', [CategoryController::class, 'show'])->name('category.show');
 });

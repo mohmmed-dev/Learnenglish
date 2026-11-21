@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="googlebot" content="noindex, nofollow" />
     <title>@yield('title', 'Admin Panel') — {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
@@ -100,7 +102,7 @@
         </aside>
 
         {{-- Main content --}}
-        <div class="flex flex-1 flex-col">
+        <div class="flex flex-1 flex-col w-full">
             {{-- Top bar --}}
             <header class="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-slate-200 bg-white/80 px-4 backdrop-blur-lg dark:border-slate-800 dark:bg-slate-900/80 lg:px-8">
                 <button @click="sidebarOpen = !sidebarOpen"
@@ -121,7 +123,7 @@
             </header>
 
             {{-- Page content --}}
-            <main class="flex-1 p-4 lg:p-8">
+            <main class="flex-1 p-4 lg:p-8 w-full">
                 {{-- Flash messages --}}
                 @if (session()->has('success'))
                     <div class="mb-6 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400"

@@ -1,12 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="light">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="{{ __('Learn English with real video lessons from our YouTube channel. Watch, listen, and speak with confidence.') }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="alternate icon" href="{{ asset('favicon.ico') }}">
 
-    <title>@yield('title', __('LearnEnglish Audio | Real English Lessons from Our YouTube Channel'))</title>
+    @if(isset($seoData))
+        {!! seo($seoData) !!}
+    @else
+        {!! seo() !!}
+    @endif
+
+    @php
+        $currentLocale = app()->getLocale();
+        $otherLocale = $currentLocale === 'ar' ? 'en' : 'ar';
+        $currentUrl = url()->current();
+
+        // Build alternative locale URL by replacing /{locale}/ prefix
+        $enUrl = preg_replace('#/(en|ar)(/|$)#', '/en$2', $currentUrl);
+        $arUrl = preg_replace('#/(en|ar)(/|$)#', '/ar$2', $currentUrl);
+    @endphp
+    <link rel="alternate" hreflang="en" href="{{ $enUrl }}">
+    <link rel="alternate" hreflang="ar" href="{{ $arUrl }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $enUrl }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +41,13 @@
             document.documentElement.setAttribute('data-theme', theme);
             document.documentElement.classList.toggle('dark', theme === 'dark');
         })();
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-PVR9637L"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
